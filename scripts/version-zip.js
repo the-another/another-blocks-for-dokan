@@ -13,7 +13,8 @@ const packageName = packageJson.name;
 const rootDir = path.join(__dirname, '/../');
 const buildDir = path.join(rootDir, 'build');
 const sourceZip = path.join(rootDir, `${packageName}.zip`);
-const targetZip = path.join(buildDir, `${packageName}-${version}.zip`);
+const versionedZip = path.join(buildDir, `${packageName}-${version}.zip`);
+const latestZip = path.join(buildDir, `${packageName}.zip`);
 
 // Check if source zip exists
 if (!fs.existsSync(sourceZip)) {
@@ -21,6 +22,20 @@ if (!fs.existsSync(sourceZip)) {
   process.exit(1);
 }
 
-// Rename the zip file
-fs.renameSync(sourceZip, targetZip);
-console.log(`✓ Created ${path.basename(targetZip)} in build directory`);
+// Create build directory if it doesn't exist
+if (!fs.existsSync(buildDir)) {
+  fs.mkdirSync(buildDir, { recursive: true });
+  console.log(`✓ Created build directory`);
+}
+
+// Copy to versioned zip in build directory
+fs.copyFileSync(sourceZip, versionedZip);
+console.log(`✓ Created ${path.basename(versionedZip)} in build directory`);
+
+// Copy to latest zip in build directory (overwrite if exists)
+fs.copyFileSync(sourceZip, latestZip);
+console.log(`✓ Updated ${path.basename(latestZip)} in build directory (latest version)`);
+
+// Remove source zip from root
+fs.unlinkSync(sourceZip);
+console.log(`✓ Removed temporary ${path.basename(sourceZip)} from root`);
