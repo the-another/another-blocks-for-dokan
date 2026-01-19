@@ -4,7 +4,7 @@ Tags: dokan, woocommerce, multivendor, blocks, fse, full-site-editing, gutenberg
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.3
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,11 @@ The latest stable version of Dokan is recommended.
 PHP 8.3 or higher is required.
 
 == Changelog ==
+
+
+
+= 1.0.1 - 2026-01-19 =
+* Fixes issue where blocks were not rendering correctly for anonymous users.
 
 = 1.0.0 =
 * Initial release

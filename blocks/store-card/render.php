@@ -20,11 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string Rendered HTML.
  */
 function dokan_render_store_card_block( array $attributes, string $content, WP_Block $block ): string {
-	// Capability check.
-	if ( ! current_user_can( 'read' ) ) {
-		return '';
-	}
-
 	// Extract attributes with defaults.
 	$use_banner_as_background = $attributes['useBannerAsBackground'] ?? false;
 	$background_overlay       = $attributes['backgroundOverlay'] ?? 0.5;

@@ -20,11 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string Rendered HTML.
  */
 function dokan_render_store_header_block( array $attributes, string $content, WP_Block $block ): string {
-	// Capability check - allow anyone to view store headers.
-	if ( ! current_user_can( 'read' ) ) {
-		return '';
-	}
-
 	// Get vendor ID from attributes or context.
 	$vendor_id = ! empty( $attributes['vendorId'] ) ? absint( $attributes['vendorId'] ) : 0;
 

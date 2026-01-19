@@ -20,11 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string Rendered HTML.
  */
 function dokan_render_store_list_block( array $attributes, string $content, WP_Block $block ): string {
-	// Capability check.
-	if ( ! current_user_can( 'read' ) ) {
-		return '';
-	}
-
 	// Extract attributes with defaults.
 	$per_page           = isset( $attributes['perPage'] ) ? absint( $attributes['perPage'] ) : 12;
 	$columns            = isset( $attributes['columns'] ) ? absint( $attributes['columns'] ) : 3;

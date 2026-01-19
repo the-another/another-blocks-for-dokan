@@ -23,11 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string Rendered HTML.
  */
 function dokan_render_product_vendor_info_block( array $attributes, string $content, WP_Block $block ): string {
-	// Capability check.
-	if ( ! current_user_can( 'read' ) ) {
-		return '';
-	}
-
 	// Get product ID from attributes or context.
 	$product_id = ! empty( $attributes['productId'] ) ? absint( $attributes['productId'] ) : 0;
 

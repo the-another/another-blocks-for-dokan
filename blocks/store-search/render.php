@@ -20,11 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string Rendered HTML.
  */
 function dokan_render_store_search_block( array $attributes, string $content, WP_Block $block ): string {
-	// Capability check.
-	if ( ! current_user_can( 'read' ) ) {
-		return '';
-	}
-
 	// Extract attributes with defaults.
 	$enable_search          = $attributes['enableSearch'] ?? true;
 	$search_placeholder     = $attributes['searchPlaceholder'] ?? __( 'Search stores...', 'another-dokan-blocks' );
