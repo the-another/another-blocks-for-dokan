@@ -1,0 +1,40 @@
+{
+  "name": "another-blocks-for-dokan",
+  "version": "1.0.0",
+  "description": "FSE-compatible Gutenberg blocks for Dokan multi-vendor marketplace",
+  "author": "The Another",
+  "license": "GPL-2.0-or-later",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "wp-scripts build src/blocks.js --output-path=dist",
+    "start": "wp-scripts start src/blocks.js --output-path=dist",
+    "format": "wp-scripts format blocks/*/src/*.js",
+    "plugin-zip": "composer build && npm run build && wp-scripts plugin-zip > /dev/null 2>&1 && node scripts/version-zip.js",
+    "version": "node scripts/version-bump.js"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^31.2.0"
+  },
+  "files": [
+    "another-blocks-for-dokan.php",
+    "composer.json",
+    "README.md",
+    "readme.txt",
+    "blocks/**/block.json",
+    "blocks/**/render.php",
+    "!blocks/**/index.js",
+    "!blocks/**/editor.scss",
+    "includes/**",
+    "languages",
+    "!languages/.gitkeep",
+    "templates/**",
+    "dist/**",
+    "vendor/autoload.php",
+    "vendor/composer"
+  ],
+  "overrides": {
+    "rimraf": "^4.0.0",
+    "glob": "^9.0.0",
+    "core-js": "^3.40.0"
+  }
+}

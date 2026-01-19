@@ -1,0 +1,38 @@
+# Development files
+/node_modules/
+/vendor/
+/tests/
+/.git/
+/.github/
+/.idea/
+/.vscode/
+/.cursor/
+
+# Build files - build/ directory IS needed in distribution (contains compiled JS/CSS)
+# /build/
+/dist/
+/src/
+
+# Documentation (if not needed in release)
+/docs/
+
+# Configuration files
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/phpunit.xml.dist
+/.phpcs.xml.dist
+/.gitignore
+/.distignore
+
+# Source files (only compiled should be included if needed)
+/src/
+
+# Testing
+/coverage/
+/.phpunit.cache/
+
+# Other
+*.md
+!readme.txt

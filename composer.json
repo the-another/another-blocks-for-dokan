@@ -1,0 +1,85 @@
+{
+	"name": "theanother/blocks-for-dokan",
+	"description": "FSE-compatible Gutenberg blocks for Dokan multi-vendor marketplace",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"version": "1.0.0",
+	"author": {
+		"name": "The Another",
+		"email": "hello@theanother.org",
+		"url": "https://theanother.org"
+	},
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"woocommerce",
+		"dokan",
+		"blocks",
+		"fse",
+		"gutenberg"
+	],
+	"homepage": "https://theanother.org/plugin/blocks-for-dokan/",
+	"support": {
+		"issues": "https://github.com/theanother/blocks-for-dokan/issues",
+		"source": "https://github.com/theanother/blocks-for-dokan"
+	},
+	"require": {
+		"php": ">=8.3"
+	},
+	"require-dev": {
+		"automattic/vipwpcs": "^3.0",
+		"brain/monkey": "^2.6",
+		"coenjacobs/mozart": "^1.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"johnpbloch/wordpress-core": "^6.9",
+		"mockery/mockery": "^1.6",
+		"php-stubs/woocommerce-stubs": "^10.4",
+		"php-stubs/wordpress-stubs": "^6.9",
+		"phpunit/phpunit": "^11.0",
+		"squizlabs/php_codesniffer": "^3.9",
+		"wp-coding-standards/wpcs": "^3.0"
+	},
+	"autoload": {
+		"classmap": [
+			"includes/"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"The_Another\\Plugin\\Blocks_Dokan\\Blocks\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"sort-packages": true
+	},
+	"scripts": {
+		"phpcs": "phpcs",
+		"phpcbf": "phpcbf",
+		"lint": "phpcs --standard=.phpcs.xml.dist",
+		"lint-fix": "phpcbf --standard=.phpcs.xml.dist",
+		"test": "phpunit",
+		"test:unit": "phpunit --testsuite=Unit",
+		"test:integration": "phpunit --testsuite=Integration",
+		"test:coverage": "phpunit --coverage-html coverage",
+		"mozart": "mozart compose && node scripts/move-production-vendor.js",
+		"build": [
+			"composer install -q --no-suggest",
+			"@composer mozart",
+			"node scripts/remove-vendor.js",
+			"@composer dump-autoload"
+		]
+	},
+	"extra": {
+		"mozart": {
+			"dep_namespace": "The_Another\\Plugin\\Blocks_Dokan\\Blocks\\Dependencies\\",
+			"dep_directory": "/dependencies/",
+			"classmap_directory": "/includes/classes/",
+			"classmap_prefix": "TheAnother_Plugin_Blocks_Dokan_",
+			"packages": [],
+			"delete_vendor_directories": true
+		}
+	}
+}

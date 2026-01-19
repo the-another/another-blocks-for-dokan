@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "the-another/dokan-more-from-seller",
+	"title": "More from Seller",
+	"category": "dokan",
+	"icon": "products",
+	"description": "Display more products from the same vendor.",
+	"keywords": [ "dokan", "vendor", "products", "seller" ],
+	"textdomain": "dokan-blocks",
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"attributes": {
+		"productId": {
+			"type": "number",
+			"default": 0
+		},
+		"perPage": {
+			"type": "number",
+			"default": 6
+		},
+		"columns": {
+			"type": "number",
+			"default": 4
+		},
+		"orderBy": {
+			"type": "string",
+			"default": "rand",
+			"enum": [ "date", "title", "price", "popularity", "rand" ]
+		}
+	},
+	"example": {
+		"attributes": {
+			"productId": 0,
+			"perPage": 6,
+			"columns": 4
+		}
+	}
+}

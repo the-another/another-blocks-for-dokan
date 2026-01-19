@@ -1,0 +1,49 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "the-another/dokan-become-vendor-cta",
+	"title": "Become Vendor CTA",
+	"category": "dokan",
+	"icon": "megaphone",
+	"description": "Call-to-action to become a vendor.",
+	"keywords": [ "dokan", "vendor", "become", "cta", "registration" ],
+	"textdomain": "dokan-blocks",
+	"supports": {
+		"html": false,
+		"align": true,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"color": {
+			"background": true,
+			"text": true
+		}
+	},
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Become a Vendor"
+		},
+		"description": {
+			"type": "string",
+			"default": "Vendors can sell products and manage a store with a vendor dashboard."
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Become a Vendor"
+		},
+		"buttonLink": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"example": {
+		"attributes": {
+			"heading": "Become a Vendor",
+			"description": "Start selling today!",
+			"buttonText": "Get Started"
+		}
+	},
+	"render": "dokan_render_become_vendor_cta_block"
+}
