@@ -4,7 +4,7 @@ Tags: dokan, woocommerce, multivendor, blocks, gutenberg
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.3
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,6 +58,16 @@ The Vendor Store Location block can alternatively display an interactive embedde
 
 == Changelog ==
 
+
+
+= 1.1.1 - 2026-05-03 =
+* Add: New `vendor-store-website` block exposes the vendor's external website URL (reads `dokan_store_url` with `user_url` fallback); supports show-icon and open-in-new-tab toggles
+* Add: New `vendor-store-description` block renders `dokan_store_description` with optional safe-HTML rendering
+* Add: `vendor-store-address` can now render Google Maps, Apple Maps, and OpenStreetMap link buttons as core `wp-block-button`s, with configurable Button Style (Default/Outline) and Button Size presets (Small through Extra Large)
+* Add: `showLabel` + `label` attributes on description, phone, website, and address blocks; default labels are "Description", "Phone", "Website", and "Address"
+* Refactor: Description, phone, website, and address blocks now render as `<dl><dt>label</dt><dd>value</dd></dl>`; per-block `style.scss` resets user-agent `dl`/`dt`/`dd` margins
+* Refactor: Drop leftover `<p>` wrappers in description, phone, website, and address render and editor previews
+* Fix: Strip HTML and trim before URL-encoding the address into map service queries to avoid leaked icon spans
 
 = 1.1.0 - 2026-04-17 =
 * Add: Vendor search block can now be placed in any parent block, no longer restricted to the vendor query loop
