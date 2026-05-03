@@ -77,6 +77,8 @@ class Block_Registry {
 				'the-another/blocks-for-dokan-vendor-store-phone' => 'tanbfd_render_vendor_store_phone_block',
 				'the-another/blocks-for-dokan-vendor-store-status' => 'tanbfd_render_vendor_store_status_block',
 				'the-another/blocks-for-dokan-vendor-store-banner' => 'tanbfd_render_vendor_store_banner_block',
+				'the-another/blocks-for-dokan-vendor-store-website' => 'tanbfd_render_vendor_store_website_block',
+				'the-another/blocks-for-dokan-vendor-store-description' => 'tanbfd_render_vendor_store_description_block',
 				'the-another/blocks-for-dokan-product-vendor-info' => 'tanbfd_render_product_vendor_info_block',
 				'the-another/blocks-for-dokan-more-from-seller' => 'tanbfd_render_more_from_seller_block',
 				'the-another/blocks-for-dokan-vendor-contact-form' => 'tanbfd_render_vendor_contact_form_block',
@@ -127,13 +129,15 @@ class Block_Registry {
 		$this->blocks['the-another/blocks-for-dokan-vendor-search']           = $blocks_dir . 'vendor-search';
 
 		// Vendor field blocks (for use inside vendor query loop).
-		$this->blocks['the-another/blocks-for-dokan-vendor-store-name']    = $blocks_dir . 'vendor-store-name';
-		$this->blocks['the-another/blocks-for-dokan-vendor-avatar']        = $blocks_dir . 'vendor-avatar';
-		$this->blocks['the-another/blocks-for-dokan-vendor-rating']        = $blocks_dir . 'vendor-rating';
-		$this->blocks['the-another/blocks-for-dokan-vendor-store-address'] = $blocks_dir . 'vendor-store-address';
-		$this->blocks['the-another/blocks-for-dokan-vendor-store-phone']   = $blocks_dir . 'vendor-store-phone';
-		$this->blocks['the-another/blocks-for-dokan-vendor-store-status']  = $blocks_dir . 'vendor-store-status';
-		$this->blocks['the-another/blocks-for-dokan-vendor-store-banner']  = $blocks_dir . 'vendor-store-banner';
+		$this->blocks['the-another/blocks-for-dokan-vendor-store-name']        = $blocks_dir . 'vendor-store-name';
+		$this->blocks['the-another/blocks-for-dokan-vendor-avatar']            = $blocks_dir . 'vendor-avatar';
+		$this->blocks['the-another/blocks-for-dokan-vendor-rating']            = $blocks_dir . 'vendor-rating';
+		$this->blocks['the-another/blocks-for-dokan-vendor-store-address']     = $blocks_dir . 'vendor-store-address';
+		$this->blocks['the-another/blocks-for-dokan-vendor-store-phone']       = $blocks_dir . 'vendor-store-phone';
+		$this->blocks['the-another/blocks-for-dokan-vendor-store-status']      = $blocks_dir . 'vendor-store-status';
+		$this->blocks['the-another/blocks-for-dokan-vendor-store-banner']      = $blocks_dir . 'vendor-store-banner';
+		$this->blocks['the-another/blocks-for-dokan-vendor-store-website']     = $blocks_dir . 'vendor-store-website';
+		$this->blocks['the-another/blocks-for-dokan-vendor-store-description'] = $blocks_dir . 'vendor-store-description';
 
 		// Product integration blocks.
 		$this->blocks['the-another/blocks-for-dokan-product-vendor-info'] = $blocks_dir . 'product-vendor-info';

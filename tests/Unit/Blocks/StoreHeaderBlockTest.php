@@ -78,6 +78,8 @@ class StoreHeaderBlockTest extends TestCase {
 		Functions\when( 'wp_kses_post' )->returnArg();
 		Functions\when( 'antispambot' )->returnArg();
 		Functions\when( 'sanitize_text_field' )->returnArg();
+		Functions\when( 'get_user_meta' )->justReturn( '' );
+		Functions\when( 'get_userdata' )->justReturn( null );
 		Functions\when( 'absint' )->alias(
 			function ( $value ) {
 				return abs( (int) $value );
@@ -142,6 +144,8 @@ class StoreHeaderBlockTest extends TestCase {
 		Functions\when( 'wp_kses_post' )->returnArg();
 		Functions\when( 'antispambot' )->returnArg();
 		Functions\when( 'sanitize_text_field' )->returnArg();
+		Functions\when( 'get_user_meta' )->justReturn( '' );
+		Functions\when( 'get_userdata' )->justReturn( null );
 		Functions\when( 'absint' )->alias(
 			function ( $value ) {
 				return abs( (int) $value );

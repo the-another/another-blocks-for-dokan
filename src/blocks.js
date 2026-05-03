@@ -26,6 +26,8 @@ import '../blocks/vendor-store-address/index.js';
 import '../blocks/vendor-store-phone/index.js';
 import '../blocks/vendor-store-status/index.js';
 import '../blocks/vendor-store-banner/index.js';
+import '../blocks/vendor-store-website/index.js';
+import '../blocks/vendor-store-description/index.js';
 
 import '../blocks/product-vendor-info/index.js';
 import '../blocks/more-from-seller/index.js';
