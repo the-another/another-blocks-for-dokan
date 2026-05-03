@@ -41,6 +41,14 @@
 		"showOpenStreetMap": {
 			"type": "boolean",
 			"default": false
+		},
+		"buttonStyle": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonSize": {
+			"type": "string",
+			"default": ""
 		}
 	}
 }

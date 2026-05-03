@@ -75,6 +75,18 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 	$show_google_maps   = $attributes['showGoogleMaps'] ?? false;
 	$show_apple_maps    = $attributes['showAppleMaps'] ?? false;
 	$show_openstreetmap = $attributes['showOpenStreetMap'] ?? false;
+	$button_style       = (string) ( $attributes['buttonStyle'] ?? '' );
+	$button_size        = (string) ( $attributes['buttonSize'] ?? '' );
+
+	$button_wrapper_classes = array( 'wp-block-button', 'tanbfd--vendor-store-address__map-link' );
+	if ( '' !== $button_style ) {
+		$button_wrapper_classes[] = 'is-style-' . sanitize_html_class( $button_style );
+	}
+
+	$button_link_classes = array( 'wp-block-button__link', 'wp-element-button' );
+	if ( '' !== $button_size ) {
+		$button_link_classes[] = 'has-' . sanitize_html_class( $button_size ) . '-font-size';
+	}
 
 	// Format the address.
 	$formatted_address = '';
@@ -131,9 +143,15 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 		<?php if ( ! empty( $map_services ) ) : ?>
 			<div class="wp-block-buttons tanbfd--vendor-store-address__map-links">
 				<?php foreach ( $map_services as $service_key => $service ) : ?>
-					<div class="wp-block-button tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--<?php echo esc_attr( $service_key ); ?>">
+					<?php
+					$service_button_classes = array_merge(
+						$button_wrapper_classes,
+						array( 'tanbfd--vendor-store-address__map-link--' . sanitize_html_class( $service_key ) )
+					);
+					?>
+					<div class="<?php echo esc_attr( implode( ' ', $service_button_classes ) ); ?>">
 						<a
-							class="wp-block-button__link wp-element-button"
+							class="<?php echo esc_attr( implode( ' ', $button_link_classes ) ); ?>"
 							href="<?php echo esc_url( $service['url'] ); ?>"
 							target="_blank"
 							rel="noopener noreferrer"

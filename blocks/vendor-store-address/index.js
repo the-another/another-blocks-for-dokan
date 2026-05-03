@@ -7,7 +7,11 @@
 
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	ToggleControl,
+	SelectControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
 
@@ -70,6 +74,8 @@ function Edit( { attributes, setAttributes, context } ) {
 		showGoogleMaps = false,
 		showAppleMaps = false,
 		showOpenStreetMap = false,
+		buttonStyle = '',
+		buttonSize = '',
 	} = attributes;
 	const vendor = context[ 'dokan/vendor' ] || {};
 
@@ -164,6 +170,79 @@ function Edit( { attributes, setAttributes, context } ) {
 							setAttributes( { showOpenStreetMap: value } )
 						}
 					/>
+					<SelectControl
+						label={ __(
+							'Button Style',
+							'the-another-blocks-for-dokan'
+						) }
+						value={ buttonStyle }
+						options={ [
+							{
+								label: __(
+									'Default',
+									'the-another-blocks-for-dokan'
+								),
+								value: '',
+							},
+							{
+								label: __(
+									'Outline',
+									'the-another-blocks-for-dokan'
+								),
+								value: 'outline',
+							},
+						] }
+						onChange={ ( value ) =>
+							setAttributes( { buttonStyle: value } )
+						}
+					/>
+					<SelectControl
+						label={ __(
+							'Button Size',
+							'the-another-blocks-for-dokan'
+						) }
+						value={ buttonSize }
+						options={ [
+							{
+								label: __(
+									'Default',
+									'the-another-blocks-for-dokan'
+								),
+								value: '',
+							},
+							{
+								label: __(
+									'Small',
+									'the-another-blocks-for-dokan'
+								),
+								value: 'small',
+							},
+							{
+								label: __(
+									'Medium',
+									'the-another-blocks-for-dokan'
+								),
+								value: 'medium',
+							},
+							{
+								label: __(
+									'Large',
+									'the-another-blocks-for-dokan'
+								),
+								value: 'large',
+							},
+							{
+								label: __(
+									'Extra Large',
+									'the-another-blocks-for-dokan'
+								),
+								value: 'x-large',
+							},
+						] }
+						onChange={ ( value ) =>
+							setAttributes( { buttonSize: value } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -183,22 +262,45 @@ function Edit( { attributes, setAttributes, context } ) {
 				</p>
 				{ mapLinks.length > 0 && (
 					<div className="wp-block-buttons tanbfd--vendor-store-address__map-links">
-						{ mapLinks.map( ( link ) => (
-							<div
-								key={ link.key }
-								className={ `wp-block-button tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--${ link.key }` }
-							>
-								<a
-									className="wp-block-button__link wp-element-button"
-									href="#map-link-preview"
-									onClick={ ( event ) =>
-										event.preventDefault()
-									}
+						{ mapLinks.map( ( link ) => {
+							const wrapperClasses = [
+								'wp-block-button',
+								'tanbfd--vendor-store-address__map-link',
+								`tanbfd--vendor-store-address__map-link--${ link.key }`,
+							];
+							if ( buttonStyle ) {
+								wrapperClasses.push(
+									`is-style-${ buttonStyle }`
+								);
+							}
+
+							const linkClasses = [
+								'wp-block-button__link',
+								'wp-element-button',
+							];
+							if ( buttonSize ) {
+								linkClasses.push(
+									`has-${ buttonSize }-font-size`
+								);
+							}
+
+							return (
+								<div
+									key={ link.key }
+									className={ wrapperClasses.join( ' ' ) }
 								>
-									{ link.label }
-								</a>
-							</div>
-						) ) }
+									<a
+										className={ linkClasses.join( ' ' ) }
+										href="#map-link-preview"
+										onClick={ ( event ) =>
+											event.preventDefault()
+										}
+									>
+										{ link.label }
+									</a>
+								</div>
+							);
+						} ) }
 					</div>
 				) }
 			</div>
