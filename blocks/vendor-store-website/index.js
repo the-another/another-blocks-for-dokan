@@ -7,9 +7,14 @@
 
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	ToggleControl,
+	TextControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
+import './style.scss';
 
 /**
  * Store website block edit component.
@@ -21,10 +26,17 @@ import metadata from './block.json';
  * @return {JSX.Element} Block edit component.
  */
 function Edit( { attributes, setAttributes, context } ) {
-	const { showIcon = true, openInNewTab = true } = attributes;
+	const {
+		showIcon = true,
+		openInNewTab = true,
+		showLabel = true,
+		label = 'Website',
+	} = attributes;
 	const vendor = context[ 'dokan/vendor' ] || {};
 
-	const website = vendor.website || __( 'No website set', 'the-another-blocks-for-dokan' );
+	const website =
+		vendor.website ||
+		__( 'No website set', 'the-another-blocks-for-dokan' );
 	const hasWebsite = Boolean( vendor.website );
 
 	const blockProps = useBlockProps();
@@ -47,11 +59,47 @@ function Edit( { attributes, setAttributes, context } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings', 'the-another-blocks-for-dokan' ) }
+					title={ __(
+						'Label Settings',
+						'the-another-blocks-for-dokan'
+					) }
 					initialOpen={ true }
 				>
 					<ToggleControl
-						label={ __( 'Show Icon', 'the-another-blocks-for-dokan' ) }
+						label={ __(
+							'Show label',
+							'the-another-blocks-for-dokan'
+						) }
+						checked={ showLabel }
+						onChange={ ( value ) =>
+							setAttributes( { showLabel: value } )
+						}
+					/>
+					{ showLabel && (
+						<TextControl
+							label={ __(
+								'Label',
+								'the-another-blocks-for-dokan'
+							) }
+							value={ label }
+							onChange={ ( value ) =>
+								setAttributes( { label: value } )
+							}
+						/>
+					) }
+				</PanelBody>
+				<PanelBody
+					title={ __(
+						'Settings',
+						'the-another-blocks-for-dokan'
+					) }
+					initialOpen={ false }
+				>
+					<ToggleControl
+						label={ __(
+							'Show Icon',
+							'the-another-blocks-for-dokan'
+						) }
 						help={ __(
 							'Display a link icon before the URL.',
 							'the-another-blocks-for-dokan'
@@ -62,7 +110,10 @@ function Edit( { attributes, setAttributes, context } ) {
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Open in new tab', 'the-another-blocks-for-dokan' ) }
+						label={ __(
+							'Open in new tab',
+							'the-another-blocks-for-dokan'
+						) }
 						help={ __(
 							'Open the website link in a new browser tab.',
 							'the-another-blocks-for-dokan'
@@ -76,16 +127,25 @@ function Edit( { attributes, setAttributes, context } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				{ hasWebsite ? (
-					<a
-						href={ vendor.website }
-						onClick={ ( e ) => e.preventDefault() }
-					>
-						{ websiteContent }
-					</a>
-				) : (
-					websiteContent
-				) }
+				<dl>
+					{ showLabel && label && (
+						<dt className="tanbfd--vendor-store-website__label">
+							{ label }
+						</dt>
+					) }
+					<dd className="tanbfd--vendor-store-website__value">
+						{ hasWebsite ? (
+							<a
+								href={ vendor.website }
+								onClick={ ( e ) => e.preventDefault() }
+							>
+								{ websiteContent }
+							</a>
+						) : (
+							websiteContent
+						) }
+					</dd>
+				</dl>
 			</div>
 		</>
 	);

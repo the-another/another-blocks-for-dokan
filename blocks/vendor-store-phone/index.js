@@ -7,9 +7,14 @@
 
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	ToggleControl,
+	TextControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
+import './style.scss';
 
 /**
  * Store phone block edit component.
@@ -21,10 +26,16 @@ import metadata from './block.json';
  * @return {JSX.Element} Block edit component.
  */
 function Edit( { attributes, setAttributes, context } ) {
-	const { showIcon = true, isLink = true } = attributes;
+	const {
+		showIcon = true,
+		isLink = true,
+		showLabel = true,
+		label = 'Phone',
+	} = attributes;
 	const vendor = context[ 'dokan/vendor' ] || {};
 
-	const phone = vendor.phone || __( 'No phone number', 'dokan-blocks' );
+	const phone =
+		vendor.phone || __( 'No phone number', 'the-another-blocks-for-dokan' );
 	const hasPhone = Boolean( vendor.phone );
 
 	const blockProps = useBlockProps();
@@ -47,14 +58,50 @@ function Edit( { attributes, setAttributes, context } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings', 'dokan-blocks' ) }
+					title={ __(
+						'Label Settings',
+						'the-another-blocks-for-dokan'
+					) }
 					initialOpen={ true }
 				>
 					<ToggleControl
-						label={ __( 'Show Icon', 'dokan-blocks' ) }
+						label={ __(
+							'Show label',
+							'the-another-blocks-for-dokan'
+						) }
+						checked={ showLabel }
+						onChange={ ( value ) =>
+							setAttributes( { showLabel: value } )
+						}
+					/>
+					{ showLabel && (
+						<TextControl
+							label={ __(
+								'Label',
+								'the-another-blocks-for-dokan'
+							) }
+							value={ label }
+							onChange={ ( value ) =>
+								setAttributes( { label: value } )
+							}
+						/>
+					) }
+				</PanelBody>
+				<PanelBody
+					title={ __(
+						'Settings',
+						'the-another-blocks-for-dokan'
+					) }
+					initialOpen={ false }
+				>
+					<ToggleControl
+						label={ __(
+							'Show Icon',
+							'the-another-blocks-for-dokan'
+						) }
 						help={ __(
 							'Display a phone icon before the number.',
-							'dokan-blocks'
+							'the-another-blocks-for-dokan'
 						) }
 						checked={ showIcon }
 						onChange={ ( value ) =>
@@ -62,10 +109,13 @@ function Edit( { attributes, setAttributes, context } ) {
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Make Clickable', 'dokan-blocks' ) }
+						label={ __(
+							'Make Clickable',
+							'the-another-blocks-for-dokan'
+						) }
 						help={ __(
 							'Make the phone number a clickable tel: link.',
-							'dokan-blocks'
+							'the-another-blocks-for-dokan'
 						) }
 						checked={ isLink }
 						onChange={ ( value ) =>
@@ -76,16 +126,25 @@ function Edit( { attributes, setAttributes, context } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				{ isLink && hasPhone ? (
-					<a
-						href={ `tel:${ phone }` }
-						onClick={ ( e ) => e.preventDefault() }
-					>
-						{ phoneContent }
-					</a>
-				) : (
-					phoneContent
-				) }
+				<dl>
+					{ showLabel && label && (
+						<dt className="tanbfd--vendor-store-phone__label">
+							{ label }
+						</dt>
+					) }
+					<dd className="tanbfd--vendor-store-phone__value">
+						{ isLink && hasPhone ? (
+							<a
+								href={ `tel:${ phone }` }
+								onClick={ ( e ) => e.preventDefault() }
+							>
+								{ phoneContent }
+							</a>
+						) : (
+							phoneContent
+						) }
+					</dd>
+				</dl>
 			</div>
 		</>
 	);

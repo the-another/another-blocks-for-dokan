@@ -37,6 +37,10 @@ function tanbfd_render_vendor_store_description_block( array $attributes, string
 	}
 
 	$allow_html = ! empty( $attributes['allowHtml'] );
+	$show_label = ! empty( $attributes['showLabel'] );
+	$label_text = isset( $attributes['label'] ) ? (string) $attributes['label'] : '';
+
+	$rendered = $allow_html ? wp_kses_post( $description ) : esc_html( wp_strip_all_tags( $description ) );
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
@@ -44,12 +48,17 @@ function tanbfd_render_vendor_store_description_block( array $attributes, string
 		)
 	);
 
-	$rendered = $allow_html ? wp_kses_post( $description ) : esc_html( wp_strip_all_tags( $description ) );
-
 	ob_start();
 	?>
 	<div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
-		<?php echo $rendered; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized via wp_kses_post or esc_html above based on allowHtml. ?>
+		<dl>
+			<?php if ( $show_label && '' !== $label_text ) : ?>
+				<dt class="tanbfd--vendor-store-description__label"><?php echo esc_html( $label_text ); ?></dt>
+			<?php endif; ?>
+			<dd class="tanbfd--vendor-store-description__value">
+				<?php echo $rendered; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized via wp_kses_post or esc_html above based on allowHtml. ?>
+			</dd>
+		</dl>
 	</div>
 	<?php
 	return (string) ob_get_clean();

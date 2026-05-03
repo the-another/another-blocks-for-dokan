@@ -38,6 +38,8 @@ function tanbfd_render_vendor_store_website_block( array $attributes, string $co
 
 	$show_icon       = ! empty( $attributes['showIcon'] );
 	$open_in_new_tab = ! empty( $attributes['openInNewTab'] );
+	$show_label      = ! empty( $attributes['showLabel'] );
+	$label_text      = isset( $attributes['label'] ) ? (string) $attributes['label'] : '';
 
 	$display_url = preg_replace( '#^https?://#', '', $website );
 	$display_url = rtrim( $display_url, '/' );
@@ -55,14 +57,21 @@ function tanbfd_render_vendor_store_website_block( array $attributes, string $co
 
 	ob_start();
 	?>
-	<p <?php echo wp_kses_post( $wrapper_attributes ); ?>>
-		<?php if ( $show_icon ) : ?>
-			<span class="dashicons dashicons-admin-links" aria-hidden="true"></span>
-		<?php endif; ?>
-		<a href="<?php echo esc_url( $website ); ?>"<?php echo $link_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static safe attributes constructed above. ?>>
-			<?php echo esc_html( $display_url ); ?>
-		</a>
-	</p>
+	<div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
+		<dl>
+			<?php if ( $show_label && '' !== $label_text ) : ?>
+				<dt class="tanbfd--vendor-store-website__label"><?php echo esc_html( $label_text ); ?></dt>
+			<?php endif; ?>
+			<dd class="tanbfd--vendor-store-website__value">
+				<?php if ( $show_icon ) : ?>
+					<span class="dashicons dashicons-admin-links" aria-hidden="true"></span>
+				<?php endif; ?>
+				<a href="<?php echo esc_url( $website ); ?>"<?php echo $link_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static safe attributes constructed above. ?>>
+					<?php echo esc_html( $display_url ); ?>
+				</a>
+			</dd>
+		</dl>
+	</div>
 	<?php
 	return (string) ob_get_clean();
 }

@@ -34,6 +34,14 @@
 		"openInNewTab": {
 			"type": "boolean",
 			"default": true
+		},
+		"showLabel": {
+			"type": "boolean",
+			"default": true
+		},
+		"label": {
+			"type": "string",
+			"default": "Website"
 		}
 	}
 }
