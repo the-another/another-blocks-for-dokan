@@ -89,24 +89,27 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 		return '';
 	}
 
+	$map_query    = trim( wp_strip_all_tags( $formatted_address ) );
 	$map_services = array();
-	if ( $show_google_maps ) {
-		$map_services['google'] = array(
-			'label' => __( 'Google Maps', 'the-another-blocks-for-dokan' ),
-			'url'   => 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $formatted_address ),
-		);
-	}
-	if ( $show_apple_maps ) {
-		$map_services['apple'] = array(
-			'label' => __( 'Apple Maps', 'the-another-blocks-for-dokan' ),
-			'url'   => 'https://maps.apple.com/?q=' . rawurlencode( $formatted_address ),
-		);
-	}
-	if ( $show_openstreetmap ) {
-		$map_services['osm'] = array(
-			'label' => __( 'OpenStreetMap', 'the-another-blocks-for-dokan' ),
-			'url'   => 'https://www.openstreetmap.org/search?query=' . rawurlencode( $formatted_address ),
-		);
+	if ( '' !== $map_query ) {
+		if ( $show_google_maps ) {
+			$map_services['google'] = array(
+				'label' => __( 'Google Maps', 'the-another-blocks-for-dokan' ),
+				'url'   => 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $map_query ),
+			);
+		}
+		if ( $show_apple_maps ) {
+			$map_services['apple'] = array(
+				'label' => __( 'Apple Maps', 'the-another-blocks-for-dokan' ),
+				'url'   => 'https://maps.apple.com/?q=' . rawurlencode( $map_query ),
+			);
+		}
+		if ( $show_openstreetmap ) {
+			$map_services['osm'] = array(
+				'label' => __( 'OpenStreetMap', 'the-another-blocks-for-dokan' ),
+				'url'   => 'https://www.openstreetmap.org/search?query=' . rawurlencode( $map_query ),
+			);
+		}
 	}
 
 	// Get wrapper attributes.
