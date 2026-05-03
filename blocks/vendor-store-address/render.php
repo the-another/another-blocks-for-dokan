@@ -126,19 +126,20 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 			<?php echo wp_kses_post( $formatted_address ); ?>
 		</p>
 		<?php if ( ! empty( $map_services ) ) : ?>
-			<ul class="tanbfd--vendor-store-address__map-links">
+			<div class="wp-block-buttons tanbfd--vendor-store-address__map-links">
 				<?php foreach ( $map_services as $service_key => $service ) : ?>
-					<li class="tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--<?php echo esc_attr( $service_key ); ?>">
+					<div class="wp-block-button tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--<?php echo esc_attr( $service_key ); ?>">
 						<a
+							class="wp-block-button__link wp-element-button"
 							href="<?php echo esc_url( $service['url'] ); ?>"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
 							<?php echo esc_html( $service['label'] ); ?>
 						</a>
-					</li>
+					</div>
 				<?php endforeach; ?>
-			</ul>
+			</div>
 		<?php endif; ?>
 	</div>
 	<?php

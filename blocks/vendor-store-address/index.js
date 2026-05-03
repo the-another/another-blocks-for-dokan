@@ -182,13 +182,14 @@ function Edit( { attributes, setAttributes, context } ) {
 					</span>
 				</p>
 				{ mapLinks.length > 0 && (
-					<ul className="tanbfd--vendor-store-address__map-links">
+					<div className="wp-block-buttons tanbfd--vendor-store-address__map-links">
 						{ mapLinks.map( ( link ) => (
-							<li
+							<div
 								key={ link.key }
-								className={ `tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--${ link.key }` }
+								className={ `wp-block-button tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--${ link.key }` }
 							>
 								<a
+									className="wp-block-button__link wp-element-button"
 									href="#map-link-preview"
 									onClick={ ( event ) =>
 										event.preventDefault()
@@ -196,9 +197,9 @@ function Edit( { attributes, setAttributes, context } ) {
 								>
 									{ link.label }
 								</a>
-							</li>
+							</div>
 						) ) }
-					</ul>
+					</div>
 				) }
 			</div>
 		</>
