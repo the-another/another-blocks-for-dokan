@@ -29,6 +29,34 @@
 		"showIcon": {
 			"type": "boolean",
 			"default": true
+		},
+		"showGoogleMaps": {
+			"type": "boolean",
+			"default": false
+		},
+		"showAppleMaps": {
+			"type": "boolean",
+			"default": false
+		},
+		"showOpenStreetMap": {
+			"type": "boolean",
+			"default": false
+		},
+		"buttonStyle": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonSize": {
+			"type": "string",
+			"default": ""
+		},
+		"showLabel": {
+			"type": "boolean",
+			"default": true
+		},
+		"label": {
+			"type": "string",
+			"default": "Address"
 		}
 	}
 }

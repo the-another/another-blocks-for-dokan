@@ -1,20 +1,21 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "the-another/blocks-for-dokan-vendor-store-phone",
-	"title": "Vendor Store Phone",
+	"name": "the-another/blocks-for-dokan-vendor-store-description",
+	"title": "Vendor Store Description",
 	"category": "dokan",
 	"ancestor": [ "the-another/blocks-for-dokan-vendor-query-loop", "the-another/blocks-for-dokan-vendor-card", "the-another/blocks-for-dokan-vendor-store-banner", "the-another/blocks-for-dokan-product-vendor-info" ],
-	"icon": "phone",
-	"description": "Display the vendor store phone number.",
-	"keywords": [ "dokan", "vendor", "store", "phone", "contact", "telephone" ],
+	"icon": "editor-paragraph",
+	"description": "Display the vendor's store description.",
+	"keywords": [ "dokan", "vendor", "store", "description", "about", "bio" ],
 	"textdomain": "the-another-blocks-for-dokan",
 	"usesContext": [ "dokan/vendor" ],
 	"supports": {
 		"html": false,
 		"color": {
 			"text": true,
-			"background": true
+			"background": true,
+			"link": true
 		},
 		"typography": {
 			"fontSize": true,
@@ -26,11 +27,7 @@
 		}
 	},
 	"attributes": {
-		"showIcon": {
-			"type": "boolean",
-			"default": true
-		},
-		"isLink": {
+		"allowHtml": {
 			"type": "boolean",
 			"default": true
 		},
@@ -40,7 +37,7 @@
 		},
 		"label": {
 			"type": "string",
-			"default": "Phone"
+			"default": "Description"
 		}
 	}
 }

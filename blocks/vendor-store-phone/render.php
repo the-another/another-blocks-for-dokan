@@ -29,12 +29,14 @@ function tanbfd_render_vendor_store_phone_block( array $attributes, string $cont
 	);
 
 	if ( empty( $vendor ) || empty( $vendor['id'] ) ) {
-		return '<p class="tanbfd--vendor-store-phone">+1 234 567 8900</p>';
+		return '<div class="tanbfd--vendor-store-phone">+1 234 567 8900</div>';
 	}
 
-	$phone     = $vendor['phone'] ?? '';
-	$show_icon = $attributes['showIcon'] ?? true;
-	$is_link   = $attributes['isLink'] ?? true;
+	$phone      = $vendor['phone'] ?? '';
+	$show_icon  = $attributes['showIcon'] ?? true;
+	$is_link    = $attributes['isLink'] ?? true;
+	$show_label = ! empty( $attributes['showLabel'] );
+	$label_text = isset( $attributes['label'] ) ? (string) $attributes['label'] : '';
 
 	// If no phone, return empty.
 	if ( empty( $phone ) ) {
@@ -53,18 +55,25 @@ function tanbfd_render_vendor_store_phone_block( array $attributes, string $cont
 
 	ob_start();
 	?>
-	<p <?php echo wp_kses_post( $wrapper_attributes ); ?>>
-		<?php if ( $show_icon ) : ?>
-			<span class="dashicons dashicons-phone" aria-hidden="true"></span>
-		<?php endif; ?>
-		<?php if ( $is_link ) : ?>
-			<a href="tel:<?php echo esc_attr( $phone_clean ); ?>">
-				<?php echo esc_html( $phone ); ?>
-			</a>
-		<?php else : ?>
-			<?php echo esc_html( $phone ); ?>
-		<?php endif; ?>
-	</p>
+	<div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
+		<dl>
+			<?php if ( $show_label && '' !== $label_text ) : ?>
+				<dt class="tanbfd--vendor-store-phone__label"><?php echo esc_html( $label_text ); ?></dt>
+			<?php endif; ?>
+			<dd class="tanbfd--vendor-store-phone__value">
+				<?php if ( $show_icon ) : ?>
+					<span class="dashicons dashicons-phone" aria-hidden="true"></span>
+				<?php endif; ?>
+				<?php if ( $is_link ) : ?>
+					<a href="tel:<?php echo esc_attr( $phone_clean ); ?>">
+						<?php echo esc_html( $phone ); ?>
+					</a>
+				<?php else : ?>
+					<?php echo esc_html( $phone ); ?>
+				<?php endif; ?>
+			</dd>
+		</dl>
+	</div>
 	<?php
 	return ob_get_clean();
 }

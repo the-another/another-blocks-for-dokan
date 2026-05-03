@@ -1,8 +1,8 @@
 /**
- * Store phone block editor component.
+ * Store description block editor component.
  *
  * @package
- * @since 1.0.0
+ * @since 1.0.4
  */
 
 import { registerBlockType } from '@wordpress/blocks';
@@ -13,7 +13,7 @@ import metadata from './block.json';
 import './style.scss';
 
 /**
- * Store phone block edit component.
+ * Store description block edit component.
  *
  * @param {Object}   props               Block props.
  * @param {Object}   props.attributes    Block attributes.
@@ -23,32 +23,17 @@ import './style.scss';
  */
 function Edit( { attributes, setAttributes, context } ) {
 	const {
-		showIcon = true,
-		isLink = true,
+		allowHtml = true,
 		showLabel = true,
-		label = 'Phone',
+		label = 'Description',
 	} = attributes;
 	const vendor = context[ 'dokan/vendor' ] || {};
 
-	const phone =
-		vendor.phone || __( 'No phone number', 'the-another-blocks-for-dokan' );
-	const hasPhone = Boolean( vendor.phone );
+	const description =
+		vendor.description ||
+		__( 'No store description set.', 'the-another-blocks-for-dokan' );
 
 	const blockProps = useBlockProps();
-
-	const phoneContent = (
-		<>
-			{ showIcon && (
-				<span
-					className="dokan-vendor-store-phone-icon"
-					aria-hidden="true"
-				>
-					📞
-				</span>
-			) }
-			<span className="dokan-vendor-store-phone-number">{ phone }</span>
-		</>
-	);
 
 	return (
 		<>
@@ -89,30 +74,16 @@ function Edit( { attributes, setAttributes, context } ) {
 				>
 					<ToggleControl
 						label={ __(
-							'Show Icon',
+							'Allow HTML',
 							'the-another-blocks-for-dokan'
 						) }
 						help={ __(
-							'Display a phone icon before the number.',
+							'Render the description with safe HTML tags. Disable to display as plain text.',
 							'the-another-blocks-for-dokan'
 						) }
-						checked={ showIcon }
+						checked={ allowHtml }
 						onChange={ ( value ) =>
-							setAttributes( { showIcon: value } )
-						}
-					/>
-					<ToggleControl
-						label={ __(
-							'Make Clickable',
-							'the-another-blocks-for-dokan'
-						) }
-						help={ __(
-							'Make the phone number a clickable tel: link.',
-							'the-another-blocks-for-dokan'
-						) }
-						checked={ isLink }
-						onChange={ ( value ) =>
-							setAttributes( { isLink: value } )
+							setAttributes( { allowHtml: value } )
 						}
 					/>
 				</PanelBody>
@@ -121,21 +92,12 @@ function Edit( { attributes, setAttributes, context } ) {
 			<div { ...blockProps }>
 				<dl>
 					{ showLabel && label && (
-						<dt className="tanbfd--vendor-store-phone__label">
+						<dt className="tanbfd--vendor-store-description__label">
 							{ label }
 						</dt>
 					) }
-					<dd className="tanbfd--vendor-store-phone__value">
-						{ isLink && hasPhone ? (
-							<a
-								href={ `tel:${ phone }` }
-								onClick={ ( e ) => e.preventDefault() }
-							>
-								{ phoneContent }
-							</a>
-						) : (
-							phoneContent
-						) }
+					<dd className="tanbfd--vendor-store-description__value">
+						{ description }
 					</dd>
 				</dl>
 			</div>
@@ -144,7 +106,7 @@ function Edit( { attributes, setAttributes, context } ) {
 }
 
 /**
- * Store phone block save component.
+ * Store description block save component.
  *
  * @return {null} Always null for server-side blocks.
  */

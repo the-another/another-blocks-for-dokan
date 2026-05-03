@@ -1,0 +1,24 @@
+/**
+ * Store phone block frontend styles.
+ *
+ * @package The_Another_Blocks_For_Dokan
+ * @since 1.0.0
+ */
+
+.wp-block-the-another-blocks-for-dokan-vendor-store-phone,
+.tanbfd--vendor-store-phone {
+
+	dl {
+		margin: 0;
+	}
+
+	dt {
+		margin: 0;
+		font-weight: 600;
+	}
+
+	dd {
+		margin: 0;
+		margin-inline-start: 0;
+	}
+}

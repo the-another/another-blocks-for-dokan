@@ -1,8 +1,8 @@
 /**
- * Store phone block editor component.
+ * Store website block editor component.
  *
  * @package
- * @since 1.0.0
+ * @since 1.0.4
  */
 
 import { registerBlockType } from '@wordpress/blocks';
@@ -13,7 +13,7 @@ import metadata from './block.json';
 import './style.scss';
 
 /**
- * Store phone block edit component.
+ * Store website block edit component.
  *
  * @param {Object}   props               Block props.
  * @param {Object}   props.attributes    Block attributes.
@@ -24,29 +24,30 @@ import './style.scss';
 function Edit( { attributes, setAttributes, context } ) {
 	const {
 		showIcon = true,
-		isLink = true,
+		openInNewTab = true,
 		showLabel = true,
-		label = 'Phone',
+		label = 'Website',
 	} = attributes;
 	const vendor = context[ 'dokan/vendor' ] || {};
 
-	const phone =
-		vendor.phone || __( 'No phone number', 'the-another-blocks-for-dokan' );
-	const hasPhone = Boolean( vendor.phone );
+	const website =
+		vendor.website ||
+		__( 'No website set', 'the-another-blocks-for-dokan' );
+	const hasWebsite = Boolean( vendor.website );
 
 	const blockProps = useBlockProps();
 
-	const phoneContent = (
+	const websiteContent = (
 		<>
 			{ showIcon && (
 				<span
-					className="dokan-vendor-store-phone-icon"
+					className="dashicons dashicons-admin-links"
 					aria-hidden="true"
-				>
-					📞
-				</span>
+				/>
 			) }
-			<span className="dokan-vendor-store-phone-number">{ phone }</span>
+			<span className="tanbfd--vendor-store-website-url">
+				{ website }
+			</span>
 		</>
 	);
 
@@ -93,7 +94,7 @@ function Edit( { attributes, setAttributes, context } ) {
 							'the-another-blocks-for-dokan'
 						) }
 						help={ __(
-							'Display a phone icon before the number.',
+							'Display a link icon before the URL.',
 							'the-another-blocks-for-dokan'
 						) }
 						checked={ showIcon }
@@ -103,16 +104,16 @@ function Edit( { attributes, setAttributes, context } ) {
 					/>
 					<ToggleControl
 						label={ __(
-							'Make Clickable',
+							'Open in new tab',
 							'the-another-blocks-for-dokan'
 						) }
 						help={ __(
-							'Make the phone number a clickable tel: link.',
+							'Open the website link in a new browser tab.',
 							'the-another-blocks-for-dokan'
 						) }
-						checked={ isLink }
+						checked={ openInNewTab }
 						onChange={ ( value ) =>
-							setAttributes( { isLink: value } )
+							setAttributes( { openInNewTab: value } )
 						}
 					/>
 				</PanelBody>
@@ -121,20 +122,20 @@ function Edit( { attributes, setAttributes, context } ) {
 			<div { ...blockProps }>
 				<dl>
 					{ showLabel && label && (
-						<dt className="tanbfd--vendor-store-phone__label">
+						<dt className="tanbfd--vendor-store-website__label">
 							{ label }
 						</dt>
 					) }
-					<dd className="tanbfd--vendor-store-phone__value">
-						{ isLink && hasPhone ? (
+					<dd className="tanbfd--vendor-store-website__value">
+						{ hasWebsite ? (
 							<a
-								href={ `tel:${ phone }` }
+								href={ vendor.website }
 								onClick={ ( e ) => e.preventDefault() }
 							>
-								{ phoneContent }
+								{ websiteContent }
 							</a>
 						) : (
-							phoneContent
+							websiteContent
 						) }
 					</dd>
 				</dl>
@@ -144,7 +145,7 @@ function Edit( { attributes, setAttributes, context } ) {
 }
 
 /**
- * Store phone block save component.
+ * Store website block save component.
  *
  * @return {null} Always null for server-side blocks.
  */

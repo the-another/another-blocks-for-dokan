@@ -35,6 +35,8 @@ class Vendor_Renderer {
 			'id'              => $vendor_id,
 			'shop_name'       => $vendor->get_shop_name(),
 			'shop_url'        => $vendor->get_shop_url(),
+			'website'         => self::get_vendor_website( $vendor_id ),
+			'description'     => self::get_vendor_description( $vendor_id ),
 			'avatar'          => $vendor->get_avatar(),
 			'banner'          => $vendor->get_banner(),
 			'phone'           => $vendor->get_phone(),
@@ -45,6 +47,48 @@ class Vendor_Renderer {
 			'store_info'      => $store_info,
 			'is_featured'     => $vendor->is_featured(),
 		);
+	}
+
+	/**
+	 * Get vendor external website URL.
+	 *
+	 * Reads the `dokan_store_url` user_meta written by integrations such as
+	 * aucteeno-nexus when syncing remote seller data. Falls back to the WP
+	 * `user_url` column when not set, which is also populated by the same
+	 * integration. Returns an empty string when neither is configured.
+	 *
+	 * @param int $vendor_id Vendor user ID.
+	 * @return string External website URL or empty string.
+	 */
+	public static function get_vendor_website( int $vendor_id ): string {
+		if ( $vendor_id <= 0 ) {
+			return '';
+		}
+
+		$website = (string) get_user_meta( $vendor_id, 'dokan_store_url', true );
+		if ( '' === $website ) {
+			$user    = get_userdata( $vendor_id );
+			$website = $user instanceof \WP_User ? (string) $user->user_url : '';
+		}
+
+		return $website;
+	}
+
+	/**
+	 * Get vendor store description text.
+	 *
+	 * Reads the `dokan_store_description` user_meta written by integrations
+	 * such as aucteeno-nexus. Returns an empty string when not configured.
+	 *
+	 * @param int $vendor_id Vendor user ID.
+	 * @return string Description text (may contain HTML) or empty string.
+	 */
+	public static function get_vendor_description( int $vendor_id ): string {
+		if ( $vendor_id <= 0 ) {
+			return '';
+		}
+
+		return (string) get_user_meta( $vendor_id, 'dokan_store_description', true );
 	}
 
 	/**
