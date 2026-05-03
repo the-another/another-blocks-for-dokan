@@ -156,10 +156,7 @@ function Edit( { attributes, setAttributes, context } ) {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __(
-						'Map Links',
-						'the-another-blocks-for-dokan'
-					) }
+					title={ __( 'Map Links', 'the-another-blocks-for-dokan' ) }
 					initialOpen={ false }
 				>
 					<ToggleControl

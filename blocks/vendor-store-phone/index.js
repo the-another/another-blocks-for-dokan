@@ -7,11 +7,7 @@
 
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	ToggleControl,
-	TextControl,
-} from '@wordpress/components';
+import { PanelBody, ToggleControl, TextControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
 import './style.scss';
@@ -88,10 +84,7 @@ function Edit( { attributes, setAttributes, context } ) {
 					) }
 				</PanelBody>
 				<PanelBody
-					title={ __(
-						'Settings',
-						'the-another-blocks-for-dokan'
-					) }
+					title={ __( 'Settings', 'the-another-blocks-for-dokan' ) }
 					initialOpen={ false }
 				>
 					<ToggleControl
