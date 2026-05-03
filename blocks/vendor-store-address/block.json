@@ -29,6 +29,18 @@
 		"showIcon": {
 			"type": "boolean",
 			"default": true
+		},
+		"showGoogleMaps": {
+			"type": "boolean",
+			"default": false
+		},
+		"showAppleMaps": {
+			"type": "boolean",
+			"default": false
+		},
+		"showOpenStreetMap": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

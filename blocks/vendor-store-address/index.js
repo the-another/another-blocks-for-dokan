@@ -65,11 +65,31 @@ function formatAddress( address ) {
  * @return {JSX.Element} Block edit component.
  */
 function Edit( { attributes, setAttributes, context } ) {
-	const { showIcon = true } = attributes;
+	const {
+		showIcon = true,
+		showGoogleMaps = false,
+		showAppleMaps = false,
+		showOpenStreetMap = false,
+	} = attributes;
 	const vendor = context[ 'dokan/vendor' ] || {};
 
 	const address = vendor.address || {};
 	const formattedAddress = formatAddress( address );
+
+	const mapLinks = [
+		showGoogleMaps && {
+			key: 'google',
+			label: __( 'Google Maps', 'the-another-blocks-for-dokan' ),
+		},
+		showAppleMaps && {
+			key: 'apple',
+			label: __( 'Apple Maps', 'the-another-blocks-for-dokan' ),
+		},
+		showOpenStreetMap && {
+			key: 'osm',
+			label: __( 'OpenStreetMap', 'the-another-blocks-for-dokan' ),
+		},
+	].filter( Boolean );
 
 	const blockProps = useBlockProps();
 
@@ -77,14 +97,17 @@ function Edit( { attributes, setAttributes, context } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings', 'dokan-blocks' ) }
+					title={ __( 'Settings', 'the-another-blocks-for-dokan' ) }
 					initialOpen={ true }
 				>
 					<ToggleControl
-						label={ __( 'Show Icon', 'dokan-blocks' ) }
+						label={ __(
+							'Show Icon',
+							'the-another-blocks-for-dokan'
+						) }
 						help={ __(
 							'Display a location icon before the address.',
-							'dokan-blocks'
+							'the-another-blocks-for-dokan'
 						) }
 						checked={ showIcon }
 						onChange={ ( value ) =>
@@ -92,20 +115,91 @@ function Edit( { attributes, setAttributes, context } ) {
 						}
 					/>
 				</PanelBody>
+				<PanelBody
+					title={ __(
+						'Map Links',
+						'the-another-blocks-for-dokan'
+					) }
+					initialOpen={ false }
+				>
+					<ToggleControl
+						label={ __(
+							'Google Maps',
+							'the-another-blocks-for-dokan'
+						) }
+						help={ __(
+							'Show a link that opens the address in Google Maps.',
+							'the-another-blocks-for-dokan'
+						) }
+						checked={ showGoogleMaps }
+						onChange={ ( value ) =>
+							setAttributes( { showGoogleMaps: value } )
+						}
+					/>
+					<ToggleControl
+						label={ __(
+							'Apple Maps',
+							'the-another-blocks-for-dokan'
+						) }
+						help={ __(
+							'Show a link that opens the address in Apple Maps.',
+							'the-another-blocks-for-dokan'
+						) }
+						checked={ showAppleMaps }
+						onChange={ ( value ) =>
+							setAttributes( { showAppleMaps: value } )
+						}
+					/>
+					<ToggleControl
+						label={ __(
+							'OpenStreetMap',
+							'the-another-blocks-for-dokan'
+						) }
+						help={ __(
+							'Show a link that opens the address in OpenStreetMap.',
+							'the-another-blocks-for-dokan'
+						) }
+						checked={ showOpenStreetMap }
+						onChange={ ( value ) =>
+							setAttributes( { showOpenStreetMap: value } )
+						}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				{ showIcon && (
-					<span
-						className="dokan-vendor-store-address-icon"
-						aria-hidden="true"
-					>
-						📍
+				<p className="tanbfd--vendor-store-address__text">
+					{ showIcon && (
+						<span
+							className="dokan-vendor-store-address-icon"
+							aria-hidden="true"
+						>
+							📍
+						</span>
+					) }
+					<span className="dokan-vendor-store-address-text">
+						{ formattedAddress }
 					</span>
+				</p>
+				{ mapLinks.length > 0 && (
+					<ul className="tanbfd--vendor-store-address__map-links">
+						{ mapLinks.map( ( link ) => (
+							<li
+								key={ link.key }
+								className={ `tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--${ link.key }` }
+							>
+								<a
+									href="#map-link-preview"
+									onClick={ ( event ) =>
+										event.preventDefault()
+									}
+								>
+									{ link.label }
+								</a>
+							</li>
+						) ) }
+					</ul>
 				) }
-				<span className="dokan-vendor-store-address-text">
-					{ formattedAddress }
-				</span>
 			</div>
 		</>
 	);

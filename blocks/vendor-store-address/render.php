@@ -70,8 +70,11 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 		return '<p class="tanbfd--vendor-store-address">123 Main St, City, Country</p>';
 	}
 
-	$address   = $vendor['address'] ?? array();
-	$show_icon = $attributes['showIcon'] ?? true;
+	$address            = $vendor['address'] ?? array();
+	$show_icon          = $attributes['showIcon'] ?? true;
+	$show_google_maps   = $attributes['showGoogleMaps'] ?? false;
+	$show_apple_maps    = $attributes['showAppleMaps'] ?? false;
+	$show_openstreetmap = $attributes['showOpenStreetMap'] ?? false;
 
 	// Format the address.
 	$formatted_address = '';
@@ -86,6 +89,26 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 		return '';
 	}
 
+	$map_services = array();
+	if ( $show_google_maps ) {
+		$map_services['google'] = array(
+			'label' => __( 'Google Maps', 'the-another-blocks-for-dokan' ),
+			'url'   => 'https://www.google.com/maps/search/?api=1&query=' . rawurlencode( $formatted_address ),
+		);
+	}
+	if ( $show_apple_maps ) {
+		$map_services['apple'] = array(
+			'label' => __( 'Apple Maps', 'the-another-blocks-for-dokan' ),
+			'url'   => 'https://maps.apple.com/?q=' . rawurlencode( $formatted_address ),
+		);
+	}
+	if ( $show_openstreetmap ) {
+		$map_services['osm'] = array(
+			'label' => __( 'OpenStreetMap', 'the-another-blocks-for-dokan' ),
+			'url'   => 'https://www.openstreetmap.org/search?query=' . rawurlencode( $formatted_address ),
+		);
+	}
+
 	// Get wrapper attributes.
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
@@ -95,12 +118,29 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 
 	ob_start();
 	?>
-	<p <?php echo wp_kses_post( $wrapper_attributes ); ?>>
-		<?php if ( $show_icon ) : ?>
-			<span class="dashicons dashicons-location" aria-hidden="true"></span>
+	<div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
+		<p class="tanbfd--vendor-store-address__text">
+			<?php if ( $show_icon ) : ?>
+				<span class="dashicons dashicons-location" aria-hidden="true"></span>
+			<?php endif; ?>
+			<?php echo wp_kses_post( $formatted_address ); ?>
+		</p>
+		<?php if ( ! empty( $map_services ) ) : ?>
+			<ul class="tanbfd--vendor-store-address__map-links">
+				<?php foreach ( $map_services as $service_key => $service ) : ?>
+					<li class="tanbfd--vendor-store-address__map-link tanbfd--vendor-store-address__map-link--<?php echo esc_attr( $service_key ); ?>">
+						<a
+							href="<?php echo esc_url( $service['url'] ); ?>"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<?php echo esc_html( $service['label'] ); ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
 		<?php endif; ?>
-		<?php echo wp_kses_post( $formatted_address ); ?>
-	</p>
+	</div>
 	<?php
 	return ob_get_clean();
 }
