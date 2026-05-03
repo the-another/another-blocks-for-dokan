@@ -67,7 +67,7 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 	);
 
 	if ( empty( $vendor ) || empty( $vendor['id'] ) ) {
-		return '<p class="tanbfd--vendor-store-address">123 Main St, City, Country</p>';
+		return '<div class="tanbfd--vendor-store-address">123 Main St, City, Country</div>';
 	}
 
 	$address            = $vendor['address'] ?? array();
@@ -77,6 +77,8 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 	$show_openstreetmap = $attributes['showOpenStreetMap'] ?? false;
 	$button_style       = (string) ( $attributes['buttonStyle'] ?? '' );
 	$button_size        = (string) ( $attributes['buttonSize'] ?? '' );
+	$show_label         = ! empty( $attributes['showLabel'] );
+	$label_text         = isset( $attributes['label'] ) ? (string) $attributes['label'] : '';
 
 	$button_wrapper_classes = array( 'wp-block-button', 'tanbfd--vendor-store-address__map-link' );
 	if ( '' !== $button_style ) {
@@ -134,34 +136,41 @@ function tanbfd_render_vendor_store_address_block( array $attributes, string $co
 	ob_start();
 	?>
 	<div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
-		<p class="tanbfd--vendor-store-address__text">
-			<?php if ( $show_icon ) : ?>
-				<span class="dashicons dashicons-location" aria-hidden="true"></span>
+		<dl>
+			<?php if ( $show_label && '' !== $label_text ) : ?>
+				<dt class="tanbfd--vendor-store-address__label"><?php echo esc_html( $label_text ); ?></dt>
 			<?php endif; ?>
-			<?php echo wp_kses_post( $formatted_address ); ?>
-		</p>
-		<?php if ( ! empty( $map_services ) ) : ?>
-			<div class="wp-block-buttons tanbfd--vendor-store-address__map-links">
-				<?php foreach ( $map_services as $service_key => $service ) : ?>
-					<?php
-					$service_button_classes = array_merge(
-						$button_wrapper_classes,
-						array( 'tanbfd--vendor-store-address__map-link--' . sanitize_html_class( $service_key ) )
-					);
-					?>
-					<div class="<?php echo esc_attr( implode( ' ', $service_button_classes ) ); ?>">
-						<a
-							class="<?php echo esc_attr( implode( ' ', $button_link_classes ) ); ?>"
-							href="<?php echo esc_url( $service['url'] ); ?>"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<?php echo esc_html( $service['label'] ); ?>
-						</a>
+			<dd class="tanbfd--vendor-store-address__value">
+				<span class="tanbfd--vendor-store-address__text">
+					<?php if ( $show_icon ) : ?>
+						<span class="dashicons dashicons-location" aria-hidden="true"></span>
+					<?php endif; ?>
+					<?php echo wp_kses_post( $formatted_address ); ?>
+				</span>
+				<?php if ( ! empty( $map_services ) ) : ?>
+					<div class="wp-block-buttons tanbfd--vendor-store-address__map-links">
+						<?php foreach ( $map_services as $service_key => $service ) : ?>
+							<?php
+							$service_button_classes = array_merge(
+								$button_wrapper_classes,
+								array( 'tanbfd--vendor-store-address__map-link--' . sanitize_html_class( $service_key ) )
+							);
+							?>
+							<div class="<?php echo esc_attr( implode( ' ', $service_button_classes ) ); ?>">
+								<a
+									class="<?php echo esc_attr( implode( ' ', $button_link_classes ) ); ?>"
+									href="<?php echo esc_url( $service['url'] ); ?>"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									<?php echo esc_html( $service['label'] ); ?>
+								</a>
+							</div>
+						<?php endforeach; ?>
 					</div>
-				<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
+				<?php endif; ?>
+			</dd>
+		</dl>
 	</div>
 	<?php
 	return ob_get_clean();

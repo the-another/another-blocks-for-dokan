@@ -11,9 +11,11 @@ import {
 	PanelBody,
 	ToggleControl,
 	SelectControl,
+	TextControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
+import './style.scss';
 
 /**
  * Format address object into a string.
@@ -76,6 +78,8 @@ function Edit( { attributes, setAttributes, context } ) {
 		showOpenStreetMap = false,
 		buttonStyle = '',
 		buttonSize = '',
+		showLabel = true,
+		label = 'Address',
 	} = attributes;
 	const vendor = context[ 'dokan/vendor' ] || {};
 
@@ -103,8 +107,38 @@ function Edit( { attributes, setAttributes, context } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings', 'the-another-blocks-for-dokan' ) }
+					title={ __(
+						'Label Settings',
+						'the-another-blocks-for-dokan'
+					) }
 					initialOpen={ true }
+				>
+					<ToggleControl
+						label={ __(
+							'Show label',
+							'the-another-blocks-for-dokan'
+						) }
+						checked={ showLabel }
+						onChange={ ( value ) =>
+							setAttributes( { showLabel: value } )
+						}
+					/>
+					{ showLabel && (
+						<TextControl
+							label={ __(
+								'Label',
+								'the-another-blocks-for-dokan'
+							) }
+							value={ label }
+							onChange={ ( value ) =>
+								setAttributes( { label: value } )
+							}
+						/>
+					) }
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Settings', 'the-another-blocks-for-dokan' ) }
+					initialOpen={ false }
 				>
 					<ToggleControl
 						label={ __(
@@ -247,62 +281,75 @@ function Edit( { attributes, setAttributes, context } ) {
 			</InspectorControls>
 
 			<div { ...blockProps }>
-				<p className="tanbfd--vendor-store-address__text">
-					{ showIcon && (
-						<span
-							className="dokan-vendor-store-address-icon"
-							aria-hidden="true"
-						>
-							📍
-						</span>
+				<dl>
+					{ showLabel && label && (
+						<dt className="tanbfd--vendor-store-address__label">
+							{ label }
+						</dt>
 					) }
-					<span className="dokan-vendor-store-address-text">
-						{ formattedAddress }
-					</span>
-				</p>
-				{ mapLinks.length > 0 && (
-					<div className="wp-block-buttons tanbfd--vendor-store-address__map-links">
-						{ mapLinks.map( ( link ) => {
-							const wrapperClasses = [
-								'wp-block-button',
-								'tanbfd--vendor-store-address__map-link',
-								`tanbfd--vendor-store-address__map-link--${ link.key }`,
-							];
-							if ( buttonStyle ) {
-								wrapperClasses.push(
-									`is-style-${ buttonStyle }`
-								);
-							}
-
-							const linkClasses = [
-								'wp-block-button__link',
-								'wp-element-button',
-							];
-							if ( buttonSize ) {
-								linkClasses.push(
-									`has-${ buttonSize }-font-size`
-								);
-							}
-
-							return (
-								<div
-									key={ link.key }
-									className={ wrapperClasses.join( ' ' ) }
+					<dd className="tanbfd--vendor-store-address__value">
+						<span className="tanbfd--vendor-store-address__text">
+							{ showIcon && (
+								<span
+									className="dokan-vendor-store-address-icon"
+									aria-hidden="true"
 								>
-									<a
-										className={ linkClasses.join( ' ' ) }
-										href="#map-link-preview"
-										onClick={ ( event ) =>
-											event.preventDefault()
-										}
-									>
-										{ link.label }
-									</a>
-								</div>
-							);
-						} ) }
-					</div>
-				) }
+									📍
+								</span>
+							) }
+							<span className="dokan-vendor-store-address-text">
+								{ formattedAddress }
+							</span>
+						</span>
+						{ mapLinks.length > 0 && (
+							<div className="wp-block-buttons tanbfd--vendor-store-address__map-links">
+								{ mapLinks.map( ( link ) => {
+									const wrapperClasses = [
+										'wp-block-button',
+										'tanbfd--vendor-store-address__map-link',
+										`tanbfd--vendor-store-address__map-link--${ link.key }`,
+									];
+									if ( buttonStyle ) {
+										wrapperClasses.push(
+											`is-style-${ buttonStyle }`
+										);
+									}
+
+									const linkClasses = [
+										'wp-block-button__link',
+										'wp-element-button',
+									];
+									if ( buttonSize ) {
+										linkClasses.push(
+											`has-${ buttonSize }-font-size`
+										);
+									}
+
+									return (
+										<div
+											key={ link.key }
+											className={ wrapperClasses.join(
+												' '
+											) }
+										>
+											<a
+												className={ linkClasses.join(
+													' '
+												) }
+												href="#map-link-preview"
+												onClick={ ( event ) =>
+													event.preventDefault()
+												}
+											>
+												{ link.label }
+											</a>
+										</div>
+									);
+								} ) }
+							</div>
+						) }
+					</dd>
+				</dl>
 			</div>
 		</>
 	);

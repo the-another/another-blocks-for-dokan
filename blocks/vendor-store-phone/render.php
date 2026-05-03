@@ -29,7 +29,7 @@ function tanbfd_render_vendor_store_phone_block( array $attributes, string $cont
 	);
 
 	if ( empty( $vendor ) || empty( $vendor['id'] ) ) {
-		return '<p class="tanbfd--vendor-store-phone">+1 234 567 8900</p>';
+		return '<div class="tanbfd--vendor-store-phone">+1 234 567 8900</div>';
 	}
 
 	$phone      = $vendor['phone'] ?? '';
