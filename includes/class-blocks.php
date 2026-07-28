@@ -114,9 +114,6 @@ final class Blocks {
 	 * @return void
 	 */
 	public function init(): void {
-		// Initialize block templates system.
-		$this->templates_controller->init();
-
 		// Register hooks.
 		$this->register_hooks();
 	}
@@ -127,6 +124,15 @@ final class Blocks {
 	 * @return void
 	 */
 	private function register_hooks(): void {
+		// Initialize the block templates system on init at early priority.
+		//
+		// This must not run any earlier: register_block_template() stores each
+		// template's __() title and description, and loading a text domain
+		// before init makes WordPress 6.7+ emit a _load_textdomain_just_in_time
+		// "called incorrectly" notice. Priority 5 keeps the templates in the
+		// registry before anything queries get_block_templates() on init.
+		$this->hook_manager->register_action( 'init', array( $this->templates_controller, 'init' ), 5 );
+
 		// Register blocks on init hook at early priority (required for block registration).
 		$this->hook_manager->register_action( 'init', array( $this->block_registry, 'register_all_blocks' ), 5 );
 

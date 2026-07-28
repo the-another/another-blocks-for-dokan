@@ -38,12 +38,18 @@ class Install {
 	}
 
 	/**
-	 * Check if required plugins meet minimum version requirements.
+	 * Detect required plugins that are missing or below the minimum version.
+	 *
+	 * Deliberately free of translation calls: this runs while the plugin file is
+	 * being included, long before `init`, and calling __() that early makes
+	 * WordPress 6.7+ emit a `_load_textdomain_just_in_time` notice. Callers turn
+	 * the result into human-readable text via {@see self::check_dependencies()}
+	 * once it is safe to translate.
 	 *
 	 * @param bool $use_constants Whether to use defined constants (runtime) or read plugin files (activation).
-	 * @return array Empty array if all requirements met, otherwise array of missing dependencies.
+	 * @return array<int, array{slug: string, required: string, installed: string|null}> Missing dependencies.
 	 */
-	public static function check_dependencies( bool $use_constants = true ): array {
+	public static function detect_missing_dependencies( bool $use_constants = true ): array {
 		$missing_dependencies = array();
 
 		// Check WooCommerce version.
@@ -57,18 +63,11 @@ class Install {
 			$wc_version  = $all_plugins['woocommerce/woocommerce.php']['Version'] ?? null;
 		}
 
-		if ( ! $wc_version ) {
-			$missing_dependencies[] = sprintf(
-				/* translators: %s: minimum WooCommerce version */
-				__( 'WooCommerce %s or higher is not installed.', 'the-another-blocks-for-dokan' ),
-				THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_WOOCOMMERCE_VERSION
-			);
-		} elseif ( version_compare( $wc_version, THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_WOOCOMMERCE_VERSION, '<' ) ) {
-			$missing_dependencies[] = sprintf(
-				/* translators: 1: installed version, 2: minimum required version */
-				__( 'WooCommerce %1$s is installed, but version %2$s or higher is required.', 'the-another-blocks-for-dokan' ),
-				$wc_version,
-				THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_WOOCOMMERCE_VERSION
+		if ( ! $wc_version || version_compare( $wc_version, THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_WOOCOMMERCE_VERSION, '<' ) ) {
+			$missing_dependencies[] = array(
+				'slug'      => 'woocommerce',
+				'required'  => THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_WOOCOMMERCE_VERSION,
+				'installed' => $wc_version ? $wc_version : null,
 			);
 		}
 
@@ -83,22 +82,73 @@ class Install {
 			$dokan_version = $all_plugins['dokan-lite/dokan.php']['Version'] ?? null;
 		}
 
-		if ( ! $dokan_version ) {
-			$missing_dependencies[] = sprintf(
-				/* translators: %s: minimum Dokan version */
-				__( 'Dokan Lite %s or higher is not installed.', 'the-another-blocks-for-dokan' ),
-				THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_DOKAN_VERSION
-			);
-		} elseif ( version_compare( $dokan_version, THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_DOKAN_VERSION, '<' ) ) {
-			$missing_dependencies[] = sprintf(
-				/* translators: 1: installed version, 2: minimum required version */
-				__( 'Dokan Lite %1$s is installed, but version %2$s or higher is required.', 'the-another-blocks-for-dokan' ),
-				$dokan_version,
-				THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_DOKAN_VERSION
+		if ( ! $dokan_version || version_compare( $dokan_version, THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_DOKAN_VERSION, '<' ) ) {
+			$missing_dependencies[] = array(
+				'slug'      => 'dokan-lite',
+				'required'  => THE_ANOTHER_BLOCKS_FOR_DOKAN_MIN_DOKAN_VERSION,
+				'installed' => $dokan_version ? $dokan_version : null,
 			);
 		}
 
 		return $missing_dependencies;
+	}
+
+	/**
+	 * Turn one detected dependency problem into a translated message.
+	 *
+	 * Must only be called on or after `init`.
+	 *
+	 * @param array{slug: string, required: string, installed: string|null} $dependency Detected dependency problem.
+	 * @return string Translated message.
+	 */
+	private static function format_dependency_message( array $dependency ): string {
+		if ( 'woocommerce' === $dependency['slug'] ) {
+			if ( null === $dependency['installed'] ) {
+				return sprintf(
+					/* translators: %s: minimum WooCommerce version */
+					__( 'WooCommerce %s or higher is not installed.', 'the-another-blocks-for-dokan' ),
+					$dependency['required']
+				);
+			}
+
+			return sprintf(
+				/* translators: 1: installed version, 2: minimum required version */
+				__( 'WooCommerce %1$s is installed, but version %2$s or higher is required.', 'the-another-blocks-for-dokan' ),
+				$dependency['installed'],
+				$dependency['required']
+			);
+		}
+
+		if ( null === $dependency['installed'] ) {
+			return sprintf(
+				/* translators: %s: minimum Dokan version */
+				__( 'Dokan Lite %s or higher is not installed.', 'the-another-blocks-for-dokan' ),
+				$dependency['required']
+			);
+		}
+
+		return sprintf(
+			/* translators: 1: installed version, 2: minimum required version */
+			__( 'Dokan Lite %1$s is installed, but version %2$s or higher is required.', 'the-another-blocks-for-dokan' ),
+			$dependency['installed'],
+			$dependency['required']
+		);
+	}
+
+	/**
+	 * Check if required plugins meet minimum version requirements.
+	 *
+	 * Translates the result, so it must only be called on or after `init`. Use
+	 * {@see self::detect_missing_dependencies()} for earlier checks.
+	 *
+	 * @param bool $use_constants Whether to use defined constants (runtime) or read plugin files (activation).
+	 * @return array<int, string> Empty array if all requirements met, otherwise translated messages.
+	 */
+	public static function check_dependencies( bool $use_constants = true ): array {
+		return array_map(
+			static fn( array $dependency ): string => self::format_dependency_message( $dependency ),
+			self::detect_missing_dependencies( $use_constants )
+		);
 	}
 
 	/**
@@ -136,10 +186,14 @@ class Install {
 	 * Runtime dependency check and admin notice.
 	 * Shows admin notice if dependencies are not met after activation.
 	 *
+	 * Called while the plugin file is being included — before `init` — so the
+	 * detected problems are kept as raw data here and only translated inside the
+	 * `admin_notices` callback, which runs late enough to load the text domain.
+	 *
 	 * @return bool True if all requirements met, false otherwise.
 	 */
 	public static function runtime_check(): bool {
-		$runtime_missing_dependencies = self::check_dependencies();
+		$runtime_missing_dependencies = self::detect_missing_dependencies();
 
 		if ( ! empty( $runtime_missing_dependencies ) ) {
 			add_action(
@@ -151,7 +205,7 @@ class Install {
 						<p><?php echo esc_html__( 'The following requirements are not met:', 'the-another-blocks-for-dokan' ); ?></p>
 						<ul style="list-style: disc; padding-left: 20px;">
 							<?php foreach ( $runtime_missing_dependencies as $dependency ) : ?>
-								<li><?php echo esc_html( $dependency ); ?></li>
+								<li><?php echo esc_html( self::format_dependency_message( $dependency ) ); ?></li>
 							<?php endforeach; ?>
 						</ul>
 					</div>
