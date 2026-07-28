@@ -4,7 +4,7 @@ Tags: dokan, woocommerce, multivendor, blocks, gutenberg
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.3
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,12 @@ The Vendor Store Location block can alternatively display an interactive embedde
 == Changelog ==
 
 
+
+
+= 1.1.2 - 2026-07-28 =
+* Fix: opening any page that renders a Dokan block emitted `Function _load_textdomain_just_in_time was called incorrectly` — `Blocks::init()` registered the FSE block templates on `plugins_loaded`, and `register_block_template()` stores each template's translated title and description, so the text domain loaded before `init`. Six strings were affected, not the one in the reported trace: the title and description of the store, store-TOC and store-list templates. Template registration now runs on `init` priority 5, matching how the blocks themselves are already registered — only the timing moved, registration itself is unchanged
+* Fix: `Install::runtime_check()` translated its dependency notices while the plugin file was still being included, earlier still. Latent, since those messages are only built when WooCommerce or Dokan is missing or outdated, but it would trip the same notice — and the version-too-old branch is not covered by the `Requires Plugins` header. Detection is now separated from formatting: `detect_missing_dependencies()` returns raw data at load time and translation happens in the `admin_notices` callback. All four translatable strings are preserved verbatim, so there is no translation churn
+* Note: ships together with Aucteeno Nexus 1.13.2, which adapts to the new registration timing — without it the Site Editor gets duplicate "Single Vendor Store" entries
 
 = 1.1.1 - 2026-05-03 =
 * Add: New `vendor-store-website` block exposes the vendor's external website URL (reads `dokan_store_url` with `user_url` fallback); supports show-icon and open-in-new-tab toggles
